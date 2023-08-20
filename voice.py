@@ -1,8 +1,11 @@
 import os
-from gtts import gTTS
 from playsound import playsound
 import time
+
+first_line_list = []
+
 def reset_list():
+    global first_line_list
     first_line_list.clear()
 
 def get_txt_files(directory):
@@ -14,7 +17,8 @@ def get_txt_files(directory):
     return txt_files
 
 def process_txt_files(txt_files):
-    first_line_list = []
+    global first_line_list
+    first_line_list.clear()
 
     for txt_file in txt_files:
         with open(txt_file, 'r') as file:
@@ -64,13 +68,27 @@ def process_txt_files(txt_files):
         playsound('parking prohibit.mp3')
         print('parking prohibit')
 
-txt_directory = "D:\\yolov7\\yolov7\\runs\\detect\\exp2\\labels"
+
+def delete_txt_files(folder_path):
+    try:
+        files = os.listdir(folder_path)
+        for file in files:
+            file_path = os.path.join(folder_path, file)
+            if file.endswith('.txt') and os.path.isfile(file_path):
+                os.remove(file_path)
+                #print(f"Deleted: {file_path}")
+    except Exception as e:
+        #print(f"Error occurred: {str(e)}")
+        pass
+txt_directory = "D:\\yolov7\\yolov7\\runs\\detect\\exp\\labels"
 txt_files = get_txt_files(txt_directory)
 first_line_list = []
 
 while True:
+    txt_files = get_txt_files(txt_directory)
     if len(first_line_list) == 0:
         process_txt_files(txt_files)
-
-    time.sleep(5)
+    
+    delete_txt_files(txt_directory)
+    #time.sleep(2)
     reset_list()
